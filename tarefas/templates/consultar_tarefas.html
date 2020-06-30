@@ -1,0 +1,206 @@
+{% extends "base_template.html" %}
+{% load ins_form_tags %}
+{% block steps %}
+<li><a href="/" class="router-link-active">Início</a></li>
+<li class="is-active"><a href="{% url "blog:blog-home" %}"
+        class="router-link-exact-active router-link-active">Disponibilidade</a></li>
+{% endblock %}
+{% block content %}
+<div class="b-steps">
+    <nav class="steps is-success">
+        <ul class="step-items">
+            <li class="step-item is-success is-active"><a class="step-link">
+                    <div class="step-marker"><span class="icon"><i class="mdi mdi-book mdi-24px"></i></span></div>
+                    <div class="step-details"><span class="step-title">Disponibilidade</span>
+                    </div>
+                </a></li>
+        </ul>
+    </nav>
+<br>
+</div>  
+<div class="table" style="padding-left: 10%;padding-right: 10%;">
+    <div class="table-wrapper">
+        <form id="regForm" method="POST">
+            {% csrf_token %}
+            <table id="myTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <!---->
+                        <th class="is-sortable">
+                            <div class="th-wrap"> Dia <span class="icon is-small" style="display: none;"><i
+                                        class="mdi mdi-menu-up"></i></span>
+                            </div>
+                        </th>
+                        <th class="is-sortable">
+                            <div class="th-wrap"> Hora Início <span class="icon is-small" style="display: none;"><i
+                                        class="mdi mdi-menu-up"></i></span>
+                            </div>
+                        </th>
+                        <th class="is-sortable">
+                            <div class="th-wrap"> Hora Final <span class="icon is-small" style="display: none;"><i
+                                        class="mdi mdi-menu-up"></i></span>
+                            </div>
+                        </th>
+                        <th class="is-sortable">
+                            <div class="th-wrap"> Tipo Tarefa <span class="icon is-small" style="display: none;"><i
+                                        class="mdi mdi-menu-up"></i></span>
+                            </div>
+                        </th>
+                        <th class="is-sortable">
+                            <div class="th-wrap"> Ações <span class="icon is-small" style="display: none;"><i
+                                        class="mdi mdi-menu-up"></i></span>
+                            </div>
+                        </th>
+                        <!---->
+                    </tr>
+                    <!---->
+                    <!---->
+                </thead>
+                {{ form.management_form }}
+                {% for disponibilidade in form %}
+                            {% for hidden in disponibilidade.hidden_fields %}
+                            {{ hidden }}
+                            {% endfor %}
+                {% endfor %}
+                <tbody id="disponibilidade">
+                    {% for disponibilidade in form %}
+                    <tr draggable="false" class="" scope="row">
+                        <!---->
+                        <td data-label="Dia" class="">
+                            {{ disponibilidade.dia_dia }}
+                            {% if disponibilidade.dia_dia.errors.0 %}
+                            <div class="has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i>{{ disponibilidade.dia_dia.errors.0 }}</div>
+                        {% endif %}
+                        </td>
+                        <td data-label="Hora Início" class="">
+                            {{ disponibilidade.horario_hora }}
+                        </td>
+                        <td data-label="Hora Final" class="">
+                            {{ disponibilidade.horario_hora1 }}
+                        {% if disponibilidade.horario_hora1.errors.0 %}
+                            <div class="has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i>{{ disponibilidade.horario_hora1.errors.0 }}</div>
+                        {% endif %}
+                        </td>
+                        <td data-label="Tipo Tarefa" class="">
+                            <select value="{{ disponibilidade.tipo_de_tarefa.value }}"  name="{{ disponibilidade.tipo_de_tarefa.html_name }}" id="{{ disponibilidade.tipo_de_tarefa.id_for_label }}">
+                                <option value="Sem preferência" {% if disponibilidade.tipo_de_tarefa.value == "Sem preferência"  %} selected="" {% endif %} >Sem preferência</option>
+                                <option value="Guiar Grupo" {% if disponibilidade.tipo_de_tarefa.value == "Guiar Grupo"  %} selected="" {% endif %} >Guiar Grupo</option>
+                                <option value="Ajudar Docente" {% if disponibilidade.tipo_de_tarefa.value == "Ajudar Docente"  %} selected="" {% endif %} >Ajudar Docente</option>
+                            </select>
+                        </td>
+                        <td data-label="Ações" class="">
+                            <a role="button" class="table_remove_button" data-toggle="modal" data-target="#{{ forloop.counter }}">
+                                <span class="icon has-text-danger">
+                                    <i class="mdi mdi-close-box mdi-24px"></i>
+                                </span>
+                            </a>
+                            {{disponibilidade.DELETE | addcss:"hide" }}  
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <!---->
+                    <!---->
+                    <!---->
+                    <!---->
+                </tbody>
+                <!---->
+            </table>
+
+            <!--TEMPLATE FOR ADD MORE REPONSAVEIS-->
+            <table style="display:none">
+                <tbody id="template_disponibilidade">
+                    <tr draggable="false" class="" scope="row">
+                        <!---->
+                        <td data-label="Dia" class="">
+                            {{form.empty_form.dia_dia}}
+                        </td>
+                        <td data-label="Hora Início" class="">
+                            {{form.empty_form.horario_hora}}
+                        </td>
+                        <td data-label="Hora Final" class="">
+                            {{form.empty_form.horario_hora1}}
+                        </td>
+                        <td data-label="Tipo Tarefa" class="">
+                            <select name="{{ form.empty_form.tipo_de_tarefa.html_name }}"
+                                id="{{ form.empty_form.tipo_de_tarefa.id_for_label }}">
+                                <option value="Sem preferência" selected="">Sem preferência</option>
+
+                                <option value="Guiar Grupo">Guiar Grupo</option>
+
+                                <option value="Ajudar Docente">Ajudar Docente</option>
+
+                            </select>
+                        </td>
+                        <td data-label="Ações" class="">
+                            <a role="button" class="table_remove_button" data-toggle="modal" data-target="#{{ forloop.counter }}">
+                                <span class="icon has-text-danger">
+                                    <i class="mdi mdi-close-box mdi-24px"></i>
+                                </span>
+                            </a>
+                            {{form.empty_form.DELETE | addcss:"hide" }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!--END TEMPLATE-->
+            <br>
+            <button type="button" class="button is-success" onclick="add_responsavel()">
+                <span class="icon is-small"><i class="mdi mdi-plus"></i></span>
+                <span>Adicionar disponibilidade</span>
+            </button>        
+            <button type="submit" class="button is-success" style="top:80px;left:235px;">
+                    <span class="icon is-small"><i class="mdi mdi-check""></i></span>
+                    <span>Submeter</span>
+            </button>        
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+        $(document).ready(function () 
+        {
+            $('.table_remove_button').each(function(){
+                applyClickRemoveRow($(this));
+            });
+        });
+
+    function add_responsavel() {
+        var value = parseInt($('#id_tarefa-TOTAL_FORMS').val());
+        $('#id_tarefa-TOTAL_FORMS').val(value + 1);
+
+        var form_idx = $('#disponibilidade').children().length;
+        var template = $('#template_disponibilidade').clone(true);
+
+        var mertens = $('#disponibilidade').append(template.html().replace(/__prefix__/g, form_idx));
+
+        applyClickRemoveRow(mertens.find('.table_remove_button'));
+    }
+
+    function applyClickRemoveRow(el){
+        el.on('click',function(){
+            $(this).next('input').prop( "checked", true );
+            $(this).next('input').val(1);
+            $(this).closest('tr').hide();
+        });
+    }
+
+</script>
+
+<!--Tipo de tarefa after submeter-->
+
+<script>
+    var tipo = "{{form.tipo.id_for_label}}";
+    var prato = "{{form.tipo.value}}";
+    $(document).ready(function () {
+      console.log(tipo);
+      var prato_name = "option[value='" + prato + "']";
+      var p = $("#" + tipo).find(prato_name);
+      p.attr("selected", "selected");
+      console.log(p);
+    });
+  </script>
+
+{% endblock content %}

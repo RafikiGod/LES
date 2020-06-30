@@ -1,0 +1,19 @@
+DB
+
+Atividade:
+    unidade organica e departamento desnecessario
+
+Estrututra de utilizadores estranha
+
+Sessao:
+    vagas ou nr de inscritos inutil
+
+
+    0=Particpante  participantes@ualg.pt
+    1=Colaborador   Colaboradores@ualg.pt
+    2=Coordenador    Coordenadores@ualg.pt
+    3=DC             DCs@ualg.pt
+    4=ADmin         Admins@ualg.pt
+
+    encryptaçao de passe no fim  de todo  
+    

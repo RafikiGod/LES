@@ -1,0 +1,308 @@
+{% extends 'base_template.html' %}
+
+{% load static %}
+{% block steps %}
+<li><a href="{% url 'blog:blog-home' %}">Início</a></li>
+<li class="is-active"><a href="" aria-current="page">Consultar Anos Anteriores</a></li>
+{% endblock %}
+{% block content %}
+<div class="columns">
+    <div class="column is-3">
+        <div>
+            <p data-v-1513178e="" class="menu-label">Filtros do Dia Aberto</p>
+            <form method="GET">
+                <div class="column">
+                    <div class="field">
+                        <div class="control is-expanded">
+                            <input type="text" id="myInput" placeholder="Filtrar por Ano" autocomplete="off"
+                                class="input">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <div class="control is-expanded">
+                            <span class="select is-fullwidth is-empty">
+                                <select id="myInput1">
+                                    <option hidden value="">Filtrar por Data do Dia Aberto</option>
+                                    {% for d in d %}
+                                    <option value="{{d.datadiaabertoinicio | date:"d/m/Y"}}">
+                                        {{d.datadiaabertoinicio | date:"d/m/Y"}}</option>
+                                    {% endfor %}
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <span class="select is-fullwidth is-empty">
+                                    <select id="myInput2">
+                                        <option hidden value="">Filtrar por Data de Inscrição</option>
+                                        {% for d in d %}
+                                        <option value="{{d.datainscricaonasatividadesinicio | date:"d/m/Y"}}">
+                                            {{d.datainscricaonasatividadesinicio | date:"d/m/Y"}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <span class="select is-fullwidth is-empty">
+                                    <select id="myInput3">
+                                        <option hidden value="">Filtrar por Data Propostas de Atividade</option>
+                                        {% for d in d %}
+                                        <option value="{{d.datapropostaatividadeinicio | date:"d/m/Y"}}">
+                                            {{d.datapropostaatividadeinicio | date:"d/m/Y"}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button class="button is-outlined is-link is-danger" type="submit" style="
+                margin-left: 5%;">
+                    <span>Limpar</span>
+                    <span class="icon is-medium"><i class="mdi mdi-broom"></i></span>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="column">
+        <div class="table ">
+            <a href="{% url 'menu:diaaberto_create' %}" class="button is-success is-outlined" type="button"
+                style="margin-bottom: 0.9rem; margin-right: 1rem;">
+                <span class="icon is-small">
+                    <i class="mdi mdi-plus"></i></span>
+                <span> Adicionar Dia Aberto </span>
+                <!----></a>
+            <div class="table-wrapper">
+                <table id="myTable" class="table has-mobile-cards is-hoverable is-fullwidth">
+                    <thead>
+                            <th>Ano</th>
+                            <th>Data Do Dia Aberto</th>
+                            <th>Data De Inscrição</th>
+                            <th>Data de Proposta de Atividades</th>
+                            <th>Ações</th>
+                    </thead>
+                    <tbody>
+                        {% for instance in diaaberto_list %}
+
+                        <tr>
+
+                            <td>{{instance.ano}}</td>
+                            <td>{{instance.datadiaabertoinicio | date:"d/m/Y"}}</td>
+                            <td>{{instance.datainscricaonasatividadesinicio | date:"d/m/Y"}}</td>
+                            <td>{{instance.datapropostaatividadeinicio | date:"d/m/Y"}}</td>
+                            <td>
+
+                                <a data-toggle="modal" data-target="#{{forloop.counter}}_">
+                                    <span class="icon is-small icon has-text-success">
+                                        <i class="mdi mdi-account-search mdi-24px"></i>
+                                    </span>
+                                </a>
+                                <a href="{% url 'menu:diaaberto_update' instance.ano %}">
+                                    <span class="icon is-small icon has-text-success">
+                                        <i class="mdi mdi-pencil mdi-24px"></i>
+                                    </span>
+                                </a>
+                                <a data-toggle="modal" data-target="#{{forloop.counter}}">
+                                    <span class="icon is-small has-text-danger">
+                                        <i class="mdi mdi-close-box mdi-24px"></i>
+                                    </span>
+                                </a>
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% for instance in diaaberto_list %}
+<div class="dialog modal" id="{{forloop.counter }}">
+    <div class="modal-background"></div>
+    <br><br><br><br><br><br><br><br><br><br><br><br>
+    <div class="modal-card animation" style="max-width:360px">
+        <!---->
+        <section class="modal-card-body is-titleless">
+            <div class="media">
+                <!---->
+                <div class="media-content">
+                    <p>Tem a certeza que quer eliminar o ano {{instance.ano}}?</p>
+                    <!---->
+                </div>
+            </div>
+        </section>
+        <footer class="modal-card-foot"><button class="button" data-dismiss="modal">
+                Cancelar
+            </button><a href="{% url 'menu:diaaberto_delete' instance.ano %}" style="text-decoration: none;"> <button
+                    class="button is-success">
+                    Confirmar
+                </button></a></footer>
+    </div>
+</div>
+
+{% endfor %}
+{% for i in diaaberto_list %}
+<div tabindex="-1" class="modal fade" id="{{forloop.counter}}_" role="dialog" aria-hidden="true"
+    aria-labelledby="exampleModalLabel">
+    <div class="modal-background"></div>
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button class="close" aria-label="Close" type="button" data-dismiss="modal">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form class="well form-horizontal ">
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">Ano</span>
+                            </div>
+                            <input disabled="" class="form-control bg-light" type="text" value="{{ i.ano }}">
+                        </div>
+                        <br>
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">Email do Dia Aberto</span>
+                            </div>
+                            <input disabled="" class="form-control col-sm-2 bg-light" type="text"
+                                value="{{ i.emaildiaaberto }}">
+                        </div>
+                        <br>
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">Endereço da página Web</span>
+                            </div>
+                            <input disabled="" class="form-control col-sm-2 bg-light" type="text"
+                                value="{{ i.enderecopaginaweb }}">
+                        </div>
+                        <br>
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">A Proposta de Atividades acaba dia</span>
+                            </div>
+                            <input disabled="" class="form-control col-sm-2 bg-light" type="text"
+                                value="{{ i.datapropostaatividadesfim  | date:"d/m/Y" }}">
+                        </div>
+                        <br>
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">A inscrição acaba dia</span>
+                            </div>
+                            <input disabled="" class="form-control col-sm-2 bg-light" type="text"
+                                value="{{ i.datainscricaonasatividadesfim  | date:"d/m/Y"}}">
+                        </div>
+                        <br>
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">O Dia Aberto acaba dia</span>
+                            </div>
+                            <input disabled="" class="form-control col-sm-2 bg-light" type="text"
+                                value="{{ i.datadiaabertofim | date:"d/m/Y" }}">
+                        </div>
+                        <br>
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">Descrição</span>
+                            </div>
+                            <input disabled="" class="form-control col-sm-2 bg-light" type="text"
+                                value="{{ i.descricao }}">
+                        </div>
+                        <br>
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">Hora de Abertura</span>
+                            </div>
+                            <input disabled="" class="form-control col-sm-2 bg-light" type="text"
+                                value="{{ i.hora_inicio | time:"H:i" }}">
+                        </div>
+                        <br>
+                        <div class="input-group col-sm-12">
+                            <div class="input-group-prepend labelForm">
+                                <span class="input-group-text w-100">Hora de Fecho</span>
+                            </div>
+                            <input disabled="" class="form-control col-sm-2 bg-light" type="text"
+                                value="{{ i.hora_fim  | time:"H:i" }}">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<script>
+    var table = 0;
+    $(document).ready(function () {
+        table = $('#myTable').DataTable({
+            "paging": true,
+            "info": false,
+            "dom": 'tp',
+            "bLengthChange": false,
+            "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "columnDefs": [
+                { "orderable": false, "targets": 4 }
+            ]
+        });
+        $('#myInput').on('keyup', function () {
+            console.log($(this).val())
+            table.column(0).search($(this).val()).draw();
+            if ($(this).val() == '')
+                $(this).css({ "color": "hsla(0,0%,47.8%,.7)" });
+            else
+                $(this).css({ "color": "black" });
+        });
+        $('#myInput1').on('change', function () {
+            table.column(1).search($(this).val()).draw();
+            if ($(this).val() == '')
+                $(this).css({ "color": "hsla(0,0%,47.8%,.7)" });
+            else
+                $(this).css({ "color": "black" });
+        });
+        $('#myInput2').on('change', function () {
+            table.column(2).search($(this).val()).draw();
+            if ($(this).val() == '')
+                $(this).css({ "color": "hsla(0,0%,47.8%,.7)" });
+            else
+                $(this).css({ "color": "black" });
+        });
+        $('#myInput3').on('change', function () {
+            table.column(3).search($(this).val()).draw();
+            if ($(this).val() == '')
+                $(this).css({ "color": "hsla(0,0%,47.8%,.7)" });
+            else
+                $(this).css({ "color": "black" });
+        });
+
+        $('#clean').on('click', function () {
+            $('#myInput').val('');
+            $('#myInput').trigger('keyup');
+            $('#myInpu1').val('');
+            $('#myInput1').trigger('keyup');
+            $('#myInpu2').val('');
+            $('#myInput2').trigger('keyup');
+            $('#myInpu3').val('');
+            $('#myInput3').trigger('keyup');
+        });
+    });
+</script>
+
+
+
+{% endblock content %}
